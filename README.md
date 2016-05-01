@@ -18,7 +18,7 @@ public class SplitStringTest {
 }
 ```
 
-##### output
+#### output
 ```console
 This
 is
@@ -79,8 +79,23 @@ a
 simple
 regex
 test
-
 ```
+
+### More about the Regular Expression
+There are three ways to combine a basic regular expression:
+1. Repetition: **A** matches character *A*,  **A+** matches one or more character *A*,   **A** matches zero or more character *A*.
+2. Concatenation: **AB** matches character *AB*
+3. Alternation: **A|B** matches character *A* or character *B*
+
+Besides
+
+- **[]** matches "anything in the set". Ex: **[abc]** matches *a, b or c*
+- **[^]** matches "anything NOT in the set". Ex: **[^abc]** matches *Any character except a, b, or c*
+
+It's not easy to remember all the regular expressions, a reference document is necessary when we write this kinds of expressions, [here](https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html) is a detailed list of all supported regular expressions in Java SE 7
+
+A website that can check your regular expressions can be found [here](https://regex101.com/), it's really pratical if we want to check if the regular expression fits our needs.
+
 
 ## Week 2 : Efficiency Analysis and Benchmarking
 
