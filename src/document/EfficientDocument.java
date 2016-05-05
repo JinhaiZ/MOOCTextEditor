@@ -42,9 +42,45 @@ public class EfficientDocument extends Document {
 		// Provide this first line in the starter code.  
 		// Words are only strings of letters.  No numbers.
 		List<String> tokens = getTokens("[!?.]+|[a-zA-Z]+");
-		
 		// TODO: Finish this method.  Remember the countSyllables method from 
 		// Document.  That will come in handy here.
+		for(String element:tokens) {
+			if (isWord(element)){
+				numWords++;
+				numSyllables +=countSyllables(element);
+			} else {
+				numSentences++;
+			}
+		}
+		
+		if (tokens.size() > 0) {
+			String last = tokens.get(tokens.size()-1);
+			if (isWord(last))numSentences++;
+		}
+			
+	}
+	protected int countSyllables(String word)
+	{
+	    //System.out.print("Counting syllables in " + word + "...");
+		int numSyllables = 0;
+		boolean newSyllable = true;
+		String vowels = "aeiouy";
+		char[] cArray = word.toCharArray();
+		for (int i = 0; i < cArray.length; i++)
+		{
+		    if (i == cArray.length-1 && Character.toLowerCase(cArray[i]) == 'e' 
+		    		&& newSyllable && numSyllables > 0) {
+                numSyllables--;
+            }
+		    if (newSyllable && vowels.indexOf(Character.toLowerCase(cArray[i])) >= 0) {
+				newSyllable = false;
+				numSyllables++;
+			}
+			else if (vowels.indexOf(Character.toLowerCase(cArray[i])) < 0) {
+				newSyllable = true;
+			}
+		}
+		return numSyllables;
 	}
 	
 	
@@ -58,7 +94,7 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumWords() {
 		//TODO: write this method.  Hint: It's simple
-	    return 0;
+	    return numWords;
 	}
 
 	/**
@@ -72,7 +108,7 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumSentences() {
         //TODO: write this method.  Hint: It's simple
-        return 0;
+        return numSentences;
 	}
 
 	/**
@@ -86,7 +122,7 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumSyllables() {
         //TODO: write this method.  Hint: It's simple
-        return 0;
+        return numSyllables;
 	}
 	
 	// Can be used for testing
