@@ -17,6 +17,7 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	
 	// The starting "word"
 	private String starter;
+	private boolean trained;
 	
 	// The random number generator
 	private Random rnGenerator;
@@ -26,6 +27,7 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 		wordList = new LinkedList<ListNode>();
 		starter = "";
 		rnGenerator = generator;
+		trained = false;
 	}
 	
 	
@@ -33,7 +35,7 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	@Override
 	public void train(String sourceText)
 	{
-		if (sourceText.length() == 0) return;
+		if (trained == true) return;
 		String words[] = sourceText.split("[ ]+");
 		starter = words[0];
 		wordList.add(new ListNode(starter));
@@ -56,6 +58,7 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 		} else {
 			prev.addNextWord(words[0]);
 		}
+		this.trained = true;
 	}
 	
 	/** 
@@ -104,7 +107,8 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	@Override
 	public void retrain(String sourceText)
 	{
-		if (sourceText.length() == 0) return;
+		if (trained == false) return;
+		trained = false;
 		this.wordList = new LinkedList<ListNode>();; 
 		this.starter = "";
 		train(sourceText);
