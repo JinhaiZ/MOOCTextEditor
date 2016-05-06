@@ -33,6 +33,7 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	@Override
 	public void train(String sourceText)
 	{
+		if (sourceText.length() == 0) return;
 		String words[] = sourceText.split("[ ]+");
 		starter = words[0];
 		wordList.add(new ListNode(starter));
@@ -103,6 +104,7 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	@Override
 	public void retrain(String sourceText)
 	{
+		if (sourceText.length() == 0) return;
 		this.wordList = new LinkedList<ListNode>();; 
 		this.starter = "";
 		train(sourceText);
@@ -185,7 +187,6 @@ class ListNode
 	
 	public String getRandomNextWord(Random generator)
 	{
-		// TODO: Implement this method
 	    // The random number generator should be passed from 
 	    // the MarkovTextGeneratorLoL class
 		if (nextWords.size() < 1) return null;
