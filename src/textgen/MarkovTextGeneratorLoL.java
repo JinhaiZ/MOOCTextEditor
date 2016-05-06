@@ -66,6 +66,7 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 		StringBuilder output = new StringBuilder();
 		output.append("");
 		ListNode prev = searchByWord(starter);
+		if (prev == null) return null;
 		for (int i = 0; i < numWords; i++) {
 			String word = prev.getRandomNextWord(rnGenerator);
 			output.append(word+" ");
@@ -189,7 +190,7 @@ class ListNode
 	    // the MarkovTextGeneratorLoL class
 		if (nextWords.size() < 1) return null;
 		if (nextWords.size() == 1) return nextWords.get(0); 
-		int ind = generator.nextInt(nextWords.size()-1);
+		int ind = generator.nextInt(nextWords.size());
 	    return nextWords.get(ind);
 	}
 
