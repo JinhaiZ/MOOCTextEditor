@@ -57,26 +57,28 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public void add(int index, E element ) 
 	{
-		if (index<0||index>=size)throw new IndexOutOfBoundsException("index is out of bound");
-		if (element == null) throw new NullPointerException("element is null");
-		LLNode<E> prev = head;
-		for (int i = 0; i < index; i++) {
-			prev = prev.next;
-		}
-		LLNode<E> node = new LLNode<E>(element);
+		if (index<0||index>size)throw new IndexOutOfBoundsException("index is out of bound");
+		if (index == size) {
+			add(element);
+		} else {
+			if (element == null) throw new NullPointerException("element is null");
+			LLNode<E> prev = head;
+			for (int i = 0; i < index; i++) {
+				prev = prev.next;
+			}
+			LLNode<E> node = new LLNode<E>(element);
 		
-		node.next = prev.next;
-		prev.next = node;
-		node.next.prev = node;
-		node.prev = prev;
-		this.size++;
+			node.next = prev.next;
+			prev.next = node;
+			node.next.prev = node;
+			node.prev = prev;
+			this.size++;}
 	}
 
 
 	/** Return the size of the list */
 	public int size() 
 	{
-		// TODO: Implement this method
 		return this.size;
 	}
 
@@ -123,6 +125,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	
 	public String toString(){
 		LLNode<E> node = head;
+		System.out.println("List size = "+size);
 		for (int i = 0; i < size; i++) {
 			node = node.next;
 			System.out.println("Node["+i+"] = "+node.data);
