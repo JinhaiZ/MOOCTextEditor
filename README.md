@@ -1,6 +1,6 @@
 # Reflections on Java Programming
 ## Week 1: Introduction and Working with Strings
-### A litte Introduction to Regular Expression
+### A little Introduction to Regular Expression
 Regular Expression is an important concept in Computer Science, I remember that in the course *Logique et langages*, my professor has already taught me how to use regular expressions to determine whether an input string meets a certain standard. For example, in the course project *Systèm de paris sportifs*, I had to write a module to determine whether the password of a new registered user contains only alphabets and numbers. If the password meets the standard, the account of the user will be created, if not, a warning message will be sent to the user. Finally, I had written a regular Expression like *[a-zA-Z]+*. Obviously this is not a practical answer, especially when we compare it with real world password restrictions like that of in social network which require a *password must contain 8 characters and at least one number, one letter and one unique character*.
 ### A simple way to spilt words from a sentence
 The simplest way to split words from a string like *"This is simple test of split string."* is to use the built in method in String data type, namely, **.split(String regex)**. The method takes in regular expression, characters that match the regular expression will be used as delimiters to split the string. For example, if we use **.split(" ")**, the string will be split every time there is a space, as shown below.
@@ -98,6 +98,7 @@ A website that can check your regular expressions can be found [here](https://re
 
 
 ## Week 2 : Efficiency Analysis and Benchmarking
+
 
 ## Week 3 : Interfaces, Linked Lists vs. Arrays, and Correctness
 
