@@ -99,6 +99,9 @@ A website that can check your regular expressions can be found [here](https://re
 
 ## Week 2 : Efficiency Analysis and Benchmarking
 
+### How to do unit test for Java in Eclipse
+
+There is a simple way to do unit test for Java in Eclipse, that is JUnit. The first time that I used JUnit, I was amazed by its simplicity and efficiency. In the computer science project *Fil Rough*, our professor use the JUnit as a way to measure the results our solution. Of course, I've wrote test cases for myself.
 
 ## Week 3 : Interfaces, Linked Lists vs. Arrays, and Correctness
 
