@@ -1,9 +1,12 @@
 package spelling;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /** 
@@ -15,11 +18,12 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 
     private TrieNode root;
     private int size;
-    
+
 
     public AutoCompleteDictionaryTrie()
 	{
 		root = new TrieNode();
+		this.size = 0;
 	}
 	
 	
@@ -28,8 +32,23 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	 * That is, you should convert the string to all lower case as you insert it. */
 	public boolean addWord(String word)
 	{
-	    //TODO: Implement this method.
-	    return false;
+		String low = word.toLowerCase();
+		TrieNode current = root;
+		int length = word.length();
+		int count = 0;
+	    for (Character c : low.toCharArray()) {
+	    	TrieNode next = current.insert(c);
+	    	if(next == null) {
+	    		next = current.getChild(c);
+	    		if (count == length -1 && next.endsWord())
+	    			return false;   			
+	    	}
+	    	current = next;
+	    	count++;
+	    }
+	    current.setEndsWord(true);
+	    this.size ++;
+	    return true;
 	}
 	
 	/** 
@@ -38,8 +57,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	 */
 	public int size()
 	{
-	    //TODO: Implement this method
-	    return 0;
+	    return this.size;
 	}
 	
 	
@@ -47,8 +65,18 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	@Override
 	public boolean isWord(String s) 
 	{
-	    // TODO: Implement this method
-		return false;
+	    String low = s.toLowerCase();
+	    TrieNode current = root;
+	    for (Character c : low.toCharArray()) {
+	    	current = current.getChild(c);
+	    	if (current == null)
+	    		return false;
+	    	
+	    }
+	    if (s.length()>0 && current.endsWord())
+	    	return true;
+	    else
+	    	return false;
 	}
 
 	/** 
@@ -61,10 +89,22 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
      */@Override
      public List<String> predictCompletions(String prefix, int numCompletions) 
      {
-    	 // TODO: Implement this method
+    	 List<String> completions = new ArrayList<String>();
     	 // This method should implement the following algorithm:
     	 // 1. Find the stem in the trie.  If the stem does not appear in the trie, return an
     	 //    empty list
+    	 TrieNode stem = root;
+    	 if (numCompletions == 0)
+    		 return completions;
+    	 
+    	 for (Character c: prefix.toCharArray()) {
+    		 stem = stem.getChild(c);
+    		 if (stem == null) {
+    			 return completions;
+    		 }
+    	 }
+    	 if (prefix.length() == 0)
+    		 stem = root;
     	 // 2. Once the stem is found, perform a breadth first search to generate completions
     	 //    using the following algorithm:
     	 //    Create a queue (LinkedList) and add the node that completes the stem to the back
@@ -75,8 +115,29 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       If it is a word, add it to the completions list
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
-    	 
-         return null;
+    	 Queue<TrieNode> queue = new LinkedList<TrieNode>();
+    	 queue.add(stem);
+    	 TrieNode current;
+    	 while(!queue.isEmpty()) {
+    		 if (completions.size() < numCompletions){
+    			 current = queue.poll();
+    			 // Visted
+    			 if (current.endsWord()) {
+    				 completions.add(current.getText());
+    			 }
+    			 Set<Character> childrens = current.getValidNextCharacters();
+    			 for (Character c: childrens) {
+    				 //System.out.println("size of set--"+childrens.size());
+    				 TrieNode newNode = current.getChild(c);
+    				 //System.out.println("current--"+current.getText());
+    				 if (newNode != null)
+    					 queue.add(newNode);
+    			 }
+    		 }
+    		 else
+    			 return completions;
+    	 }
+    	 return completions;
      }
 
  	// For debugging

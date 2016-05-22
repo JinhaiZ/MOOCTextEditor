@@ -22,6 +22,7 @@ public class AutoCompleteDictionaryTrieTester {
 	AutoCompleteDictionaryTrie emptyDict; 
 	AutoCompleteDictionaryTrie smallDict;
 	AutoCompleteDictionaryTrie largeDict;
+	AutoCompleteDictionaryTrie testDict;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -32,6 +33,7 @@ public class AutoCompleteDictionaryTrieTester {
 		emptyDict = new AutoCompleteDictionaryTrie();
 		smallDict = new AutoCompleteDictionaryTrie();
 		largeDict = new AutoCompleteDictionaryTrie();
+		testDict = new AutoCompleteDictionaryTrie();
 
 		smallDict.addWord("Hello");
 		smallDict.addWord("HElLo");
@@ -42,6 +44,8 @@ public class AutoCompleteDictionaryTrieTester {
 		smallDict.addWord("hey");
 		smallDict.addWord("a");
 		smallDict.addWord("subsequent");
+		
+		testDict.addWord("downhill");
 		
 		DictionaryLoader.loadDictionary(largeDict, dictFile);
 	}
@@ -81,6 +85,9 @@ public class AutoCompleteDictionaryTrieTester {
 		assertEquals("Testing isWord on small: subsequent", true, smallDict.isWord("subsequent"));
 		assertEquals("Testing isWord on large: subsequent", true, largeDict.isWord("subsequent"));
 		
+		assertEquals("Testing isWord on test: subsequent", false, testDict.isWord("downhil"));
+		assertEquals("Testing isWord on test: subsequent", false, testDict.isWord("downhille"));
+		
 		
 	}
 	
@@ -89,7 +96,7 @@ public class AutoCompleteDictionaryTrieTester {
 	public void addWord()
 	{
 		
-		
+
 		assertEquals("Asserting hellow is not in empty dict", false, emptyDict.isWord("hellow"));
 		assertEquals("Asserting hellow is not in small dict", false, smallDict.isWord("hellow"));
 		assertEquals("Asserting hellow is not in large dict", false, largeDict.isWord("hellow"));
@@ -135,8 +142,10 @@ public class AutoCompleteDictionaryTrieTester {
 		List<String> completions;
 		completions = smallDict.predictCompletions("", 0);
 		assertEquals(0, completions.size());
-		
 		completions = smallDict.predictCompletions("",  4);
+		
+		
+		
 		assertEquals(4, completions.size());
 		assertTrue(completions.contains("a"));
 		assertTrue(completions.contains("he"));
