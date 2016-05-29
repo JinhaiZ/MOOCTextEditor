@@ -297,6 +297,10 @@ assertEquals(java.lang.String message, long expected, long actual)
 
 ## Week 3 : Interfaces, Linked Lists vs. Arrays, and Correctness
 
+### An introduction to LinkedList and ArrayList in Java
+
+LinkedList and ArrayList are probably the two most commonly used built-in data structures in Java. Both of them implemented the List interface which extends the interface Collection.
+
 ## Week 4 : Trees! (including Binary Search Trees and Tries)
 
 ## Week 5 : Hash Maps and Edit Distance
