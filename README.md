@@ -300,6 +300,203 @@ assertEquals(java.lang.String message, long expected, long actual)
 ### An introduction to LinkedList and ArrayList in Java
 
 LinkedList and ArrayList are probably the two most commonly used built-in data structures in Java. Both of them implemented the List interface which extends the interface Collection.
+-LinkedList is a double linked list, we can do sequential access and add a new node in the middle of the list in O(1) time, however, it doesn't have a index for random access
+-ArrayList is a resizable list, we can do random access in O(1) time, however, when we want to add or delete an element in ArrayList, it can be less performance than LinkedList
+
+### The code snippet of an implementation of double linked list
+
+The snippet below shows the LinkedList that I've implemented during the project
+```java
+public class MyLinkedList<E> extends AbstractList<E> {
+	LLNode<E> head;
+	LLNode<E> tail;
+	int size;
+
+	/**
+	 * Create a new empty LinkedList
+	 */
+	public MyLinkedList() {
+		head = new LLNode<E>(null);
+		tail = new LLNode<E>(null,head);
+		this.size = 0;
+	}
+
+	/**
+	 * Appends an element to the end of the list
+	 * @param element The element to add
+	 */
+	public boolean add(E element ) 
+	{
+		if (element == null) throw new NullPointerException("element is null");
+		LLNode<E> node = new LLNode<E>(element);
+		LLNode<E> prev = tail.prev;
+		prev.next = node;
+		node.next = tail;
+		node.prev = prev;
+		tail.prev = node;
+		this.size++;
+		return true;
+	}
+
+	/** Get the element at position index 
+	 * @throws IndexOutOfBoundsException if the index is out of bounds. 
+	 */
+	public E get(int index) 
+	{
+		if (index<0||index>=size)throw new IndexOutOfBoundsException("index is out of bound");
+		LLNode<E> node = head;
+		for (int i = 0; i <= index; i++) {
+			node = node.next;
+		}
+		return node.data;
+	}
+
+	/**
+	 * Add an element to the list at the specified index
+	 * @param The index where the element should be added
+	 * @param element The element to add
+	 */
+	public void add(int index, E element ) 
+	{
+		if (index<0||index>size)throw new IndexOutOfBoundsException("index is out of bound");
+		if (index == size) {
+			add(element);
+		} else {
+			if (element == null) throw new NullPointerException("element is null");
+			LLNode<E> prev = head;
+			for (int i = 0; i < index; i++) {
+				prev = prev.next;
+			}
+			LLNode<E> node = new LLNode<E>(element);
+		
+			node.next = prev.next;
+			prev.next = node;
+			node.next.prev = node;
+			node.prev = prev;
+			this.size++;}
+	}
+
+
+	/** 
+	* Return the size of the list 
+	*/
+	public int size() 
+	{
+		return this.size;
+	}
+
+	/** 
+	 * Remove a node at the specified index and return its data element.
+	 * @param index The index of the element to remove
+	 * @return The data element removed
+	 * @throws IndexOutOfBoundsException If index is outside the bounds of the list
+	 */
+	public E remove(int index) 
+	{
+		if (index<0||index>=size)throw new IndexOutOfBoundsException("index is out of bound");
+		LLNode<E> prev = head;
+		for (int i = 0; i < index; i++) {
+			prev = prev.next;
+		}
+		LLNode<E> remove = prev.next;
+		remove.next.prev = prev;
+		prev.next = remove.next;
+		this.size--;
+
+		return remove.data;
+	}
+
+	/**
+	 * Set an index position in the list to a new element
+	 * @param index The index of the element to change
+	 * @param element The new element
+	 * @return The element that was replaced
+	 * @throws IndexOutOfBoundsException if the index is out of bounds.
+	 */
+	public E set(int index, E element) 
+	{
+		if (index<0||index>=size)throw new IndexOutOfBoundsException("index is out of bound");
+		if (element == null) throw new NullPointerException("element is null");
+		LLNode<E> node = head;
+		for (int i = 0; i <= index; i++) {
+			node = node.next;
+		}
+		E original = node.data;
+		node.data = element;
+		return original;
+	} 
+	
+	/**
+	 * print the elements of the list
+	 */
+	public String toString(){
+		LLNode<E> node = head;
+		System.out.println("List size = "+size);
+		for (int i = 0; i < size; i++) {
+			node = node.next;
+			System.out.println("Node["+i+"] = "+node.data);
+		}
+		return null;
+		
+	} 	
+}
+
+class LLNode<E> 
+{
+	LLNode<E> prev;
+	LLNode<E> next;
+	E data;
+
+	public LLNode(E e) 
+	{
+		this.data = e;
+		this.prev = null;
+		this.next = null;
+	}
+	
+	public LLNode(E e,LLNode<E> prev)
+	{
+		this.data = e;
+		prev.next = this;
+		this.prev = prev;
+		this.next = null;
+	}
+
+}
+```
+
+First of all, in order to implement a double linked list, we need to define a node class which stores datad and has a pointer to its previous and next node. Then we have a header node and tail node in MyLinkedList class, which serve as a pointer to point the first and the last node in the list. Alternatively, we can use the header node and tail node as guard nodes whose next and previous point to the first and last node in the list separately.
+In the same time, we see that, a double linked list has the following basic methods:
+- Appends an element to the end of the list
+```java
+public boolean add(E element ) 
+```
+- Add an element to the list at the specified index
+```java
+public void add(int index, E element )
+```
+- Remove a node at the specified index and return its data element.
+```java
+public E remove(int index) 
+```
+- Get the element at position index 
+```java
+public E get(int index)
+```
+- Set an index position in the list to a new element
+```java
+public E set(int index, E element) 
+```
+- Return the size of the list
+```java
+public int size() 
+```
+Also we have the **toString()** method, these methods permit the basic manipulation  of a linked list.
+Compared the linked list that I implemented by myself, the bulit-in LinkedList class in Java is far more complex as it has implemented several  other interfaces like the **Queue<E>** interface. That is to say, when we need a queue structure, we can initialize a queue that contains integer by the following method 
+```java
+Queue<Integer> q = new LinkedList<Integer>()
+```
+Then we can use the bulit-in method of queue, like **add(E e)**, **peek()**, **poll()** and **remove()**
 
 ## Week 4 : Trees! (including Binary Search Trees and Tries)
 
