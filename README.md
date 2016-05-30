@@ -307,165 +307,7 @@ LinkedList and ArrayList are probably the two most commonly used built-in data s
 
 ### The code snippet of an implementation of double linked list
 
-The snippet below shows the LinkedList that I've implemented during the project
-```java
-public class MyLinkedList<E> extends AbstractList<E> {
-	LLNode<E> head;
-	LLNode<E> tail;
-	int size;
-
-	/**
-	 * Create a new empty LinkedList
-	 */
-	public MyLinkedList() {
-		head = new LLNode<E>(null);
-		tail = new LLNode<E>(null,head);
-		this.size = 0;
-	}
-
-	/**
-	 * Appends an element to the end of the list
-	 * @param element The element to add
-	 */
-	public boolean add(E element ) 
-	{
-		if (element == null) throw new NullPointerException("element is null");
-		LLNode<E> node = new LLNode<E>(element);
-		LLNode<E> prev = tail.prev;
-		prev.next = node;
-		node.next = tail;
-		node.prev = prev;
-		tail.prev = node;
-		this.size++;
-		return true;
-	}
-
-	/** Get the element at position index 
-	 * @throws IndexOutOfBoundsException if the index is out of bounds. 
-	 */
-	public E get(int index) 
-	{
-		if (index<0||index>=size)throw new IndexOutOfBoundsException("index is out of bound");
-		LLNode<E> node = head;
-		for (int i = 0; i <= index; i++) {
-			node = node.next;
-		}
-		return node.data;
-	}
-
-	/**
-	 * Add an element to the list at the specified index
-	 * @param The index where the element should be added
-	 * @param element The element to add
-	 */
-	public void add(int index, E element ) 
-	{
-		if (index<0||index>size)throw new IndexOutOfBoundsException("index is out of bound");
-		if (index == size) {
-			add(element);
-		} else {
-			if (element == null) throw new NullPointerException("element is null");
-			LLNode<E> prev = head;
-			for (int i = 0; i < index; i++) {
-				prev = prev.next;
-			}
-			LLNode<E> node = new LLNode<E>(element);
-		
-			node.next = prev.next;
-			prev.next = node;
-			node.next.prev = node;
-			node.prev = prev;
-			this.size++;}
-	}
-
-
-	/** 
-	* Return the size of the list 
-	*/
-	public int size() 
-	{
-		return this.size;
-	}
-
-	/** 
-	 * Remove a node at the specified index and return its data element.
-	 * @param index The index of the element to remove
-	 * @return The data element removed
-	 * @throws IndexOutOfBoundsException If index is outside the bounds of the list
-	 */
-	public E remove(int index) 
-	{
-		if (index<0||index>=size)throw new IndexOutOfBoundsException("index is out of bound");
-		LLNode<E> prev = head;
-		for (int i = 0; i < index; i++) {
-			prev = prev.next;
-		}
-		LLNode<E> remove = prev.next;
-		remove.next.prev = prev;
-		prev.next = remove.next;
-		this.size--;
-
-		return remove.data;
-	}
-
-	/**
-	 * Set an index position in the list to a new element
-	 * @param index The index of the element to change
-	 * @param element The new element
-	 * @return The element that was replaced
-	 * @throws IndexOutOfBoundsException if the index is out of bounds.
-	 */
-	public E set(int index, E element) 
-	{
-		if (index<0||index>=size)throw new IndexOutOfBoundsException("index is out of bound");
-		if (element == null) throw new NullPointerException("element is null");
-		LLNode<E> node = head;
-		for (int i = 0; i <= index; i++) {
-			node = node.next;
-		}
-		E original = node.data;
-		node.data = element;
-		return original;
-	} 
-	
-	/**
-	 * print the elements of the list
-	 */
-	public String toString(){
-		LLNode<E> node = head;
-		System.out.println("List size = "+size);
-		for (int i = 0; i < size; i++) {
-			node = node.next;
-			System.out.println("Node["+i+"] = "+node.data);
-		}
-		return null;
-		
-	} 	
-}
-
-class LLNode<E> 
-{
-	LLNode<E> prev;
-	LLNode<E> next;
-	E data;
-
-	public LLNode(E e) 
-	{
-		this.data = e;
-		this.prev = null;
-		this.next = null;
-	}
-	
-	public LLNode(E e,LLNode<E> prev)
-	{
-		this.data = e;
-		prev.next = this;
-		this.prev = prev;
-		this.next = null;
-	}
-
-}
-```
+The snippet below shows the LinkedList that I've implemented during the project can be found [here](https://github.com/JinhaiZ/MOOCTextEditor/tree/master/src/textgen)
 
 First of all, in order to implement a double linked list, we need to define a node class which stores datad and has a pointer to its previous and next node. Then we have a header node and tail node in MyLinkedList class, which serve as a pointer to point the first and the last node in the list. Alternatively, we can use the header node and tail node as guard nodes whose next and previous point to the first and last node in the list separately.
 In the same time, we see that, a double linked list has the following basic methods:
@@ -504,8 +346,39 @@ Instead, the following declearation of a queue is not correct
 
 ~~Queue\<Integer\> q = new LinkedList<Integer>()~~
 
+### Generate text based on a Markov chain
+
+Can we write a method to generate a text based on the texts that we have already seen ? The answer is yes, in fact, we can use a Markov chain to generate text based on texts that we used to **train** the Markov chain. In mathematique, we use Markov chain to describe a random process on a state space and it has a famous property that the probability distribution of transition to the next state depends only on the current state and not on the sequence of events that before it, which is called "memorylessness".
+
+So we can split our task in two steps, **training** and **generating**:
+- In training step, we use texts to build a Markov chain
+- In generating step, we start from the first state of the Markov chain and transist to next state following the probability distribution of transition in each state untill the final state.
+
+For the aim of simplicity, the interface of MarkovTextGenerator is given as below
+
+```java
+public interface MarkovTextGenerator {
+	
+	/** Train the generator by adding the sourceText */
+	public void train(String sourceText);
+	
+	/** Generate the text with the specified number of words */
+	public String generateText(int numWords);
+	
+	/** Retrain the generator from scratch on the source text */
+	public void retrain(String sourceText);
+}
+```
+we can see that, training and generating steps correspond to method **train** and **generateText** separately, besides, **retrain** is used to retraining the existing Markov chain.
+
+### An implementation of MarkovTextGenerator
+
+My implementation of the interface MarkovTextGenerator during the project can be found [here](https://github.com/JinhaiZ/MOOCTextEditor/tree/master/src/textgen)
+
+Besides, we have several test cases in the main method of MarkovTextGeneratorLoL class which gives us an intuitive way to know what exactly the Markov chain is playing in text generating step.
 
 ## Week 4 : Trees! (including Binary Search Trees and Tries)
+
 
 ## Week 5 : Hash Maps and Edit Distance
 
