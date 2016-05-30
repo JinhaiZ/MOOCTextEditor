@@ -300,8 +300,10 @@ assertEquals(java.lang.String message, long expected, long actual)
 ### An introduction to LinkedList and ArrayList in Java
 
 LinkedList and ArrayList are probably the two most commonly used built-in data structures in Java. Both of them implemented the List interface which extends the interface Collection.
--LinkedList is a double linked list, we can do sequential access and add a new node in the middle of the list in O(1) time, however, it doesn't have a index for random access
--ArrayList is a resizable list, we can do random access in O(1) time, however, when we want to add or delete an element in ArrayList, it can be less performance than LinkedList
+
+- LinkedList is a double linked list, we can do sequential access and add a new node in the middle of the list in O(1) time, however, it doesn't have a index for random access
+
+- ArrayList is a resizable list, we can do random access in O(1) time, however, when we want to add or delete an element in ArrayList, it can be less performance than LinkedList
 
 ### The code snippet of an implementation of double linked list
 
@@ -497,6 +499,11 @@ Compared the linked list that I implemented by myself, the bulit-in LinkedList c
 Queue<Integer> q = new LinkedList<Integer>()
 ```
 Then we can use the bulit-in method of queue, like **add(E e)**, **peek()**, **poll()** and **remove()**
+
+Instead, the following declearation of a queue is not correct
+
+~~Queue\<Integer\> q = new LinkedList<Integer>()~~
+
 
 ## Week 4 : Trees! (including Binary Search Trees and Tries)
 
